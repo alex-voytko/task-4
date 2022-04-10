@@ -1,24 +1,38 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Table } from "react-bootstrap";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Table, Button } from "react-bootstrap";
 import userOperations from "../redux/user-redux/user-operations";
+import _ from "lodash";
 
 function UserView() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
-  let i = 1;
+  const [markedItems, setMarkedItems] = useState([]);
+  let counter = 1;
   const getItems = useSelector(state => state.users.items);
   const isLogined = useSelector(state => state.auth.loginedUser.token);
 
   const handleChangeOne = e => {
-    console.log(e.target);
+    const { id, dataset } = e.target;
+    setMarkedItems(
+      !markedItems.map(el => el._id).includes(id)
+        ? [...markedItems, users[dataset.id]]
+        : markedItems.filter(el => el._id !== id),
+    );
   };
-
+  console.log(markedItems);
   const handleChangeAll = e => {};
-  console.log(users);
+
+  const onDeleteClick = () => {
+    dispatch(userOperations.deleteUsers(markedItems.map(el => el._id)));
+    const updatedUsers = [...users];
+    _.pullAllWith(updatedUsers, markedItems, _.isEqual);
+    setMarkedItems([]);
+    setUsers([...updatedUsers]);
+  };
   useEffect(() => {
     dispatch(userOperations.fetchUsers());
     setUsers([...getItems]);
@@ -30,7 +44,25 @@ function UserView() {
 
   return (
     <>
-      <h2 className="mb-4">User List</h2>
+      <>
+        <h2 className="mb-4">User List</h2>
+        <Button
+          variant="dark"
+          disabled={!markedItems.length ? true : false}
+          type="button"
+        >
+          Block
+        </Button>
+        <Button
+          variant="danger"
+          disabled={!markedItems.length ? true : false}
+          type="button"
+          onClick={onDeleteClick}
+        >
+          Delete
+        </Button>
+      </>
+
       <Table bordered size="sm">
         <thead>
           <tr>
@@ -50,9 +82,14 @@ function UserView() {
             ({ _id, name, email, signUpDate, lastVisit, isOnline }) => (
               <tr key={_id}>
                 <td>
-                  <input id={_id} type="checkbox" onChange={handleChangeOne} />
+                  <input
+                    data-id={counter - 1}
+                    id={_id}
+                    type="checkbox"
+                    onChange={handleChangeOne}
+                  />
                 </td>
-                <td>{i++}</td>
+                <td>{counter++}</td>
                 <td>{name}</td>
                 <td>{email}</td>
                 <td>{signUpDate}</td>

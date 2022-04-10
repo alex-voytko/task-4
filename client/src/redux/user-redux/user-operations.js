@@ -26,4 +26,15 @@ const updateLoginedUser = id => dispatch => {
     .catch(error => dispatch(userActions.updateUserError(error.message)));
 };
 
-export default { fetchUsers, updateLoginedUser };
+const deleteUsers = ids => dispatch => {
+  dispatch(userActions.deleteUsersRequest());
+
+  ids.forEach(id => {
+    axios
+      .delete(`/users/${id}`)
+      .then(({ data }) => dispatch(userActions.deleteUsersSuccess(data)))
+      .catch(error => dispatch(userActions.deleteUsersError(error.message)));
+  });
+};
+
+export default { fetchUsers, updateLoginedUser, deleteUsers };

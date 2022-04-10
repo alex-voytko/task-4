@@ -1,7 +1,6 @@
 import * as authActions from "./auth-actions";
 import axios from "axios";
 import userOperations from "../user-redux/user-operations";
-import moment from "moment";
 
 axios.defaults.baseURL = "http://localhost:5000/app";
 

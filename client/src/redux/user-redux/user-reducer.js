@@ -21,6 +21,7 @@ const error = createReducer(null, {
 const redirect = createReducer(false, {
   [userActions.updateUserSuccess]: () => true,
   [authActions.logOutUserSuccess]: () => false,
+  [userActions.deleteUsersSuccess]: () => true,
 });
 const loading = createReducer(false, {
   [userActions.fetchUserRequest]: () => true,
