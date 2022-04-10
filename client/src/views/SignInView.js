@@ -34,8 +34,8 @@ function SignInView() {
   }, [isLogined]);
 
   useEffect(() => {
-    if (redirect) navigate("/user");
-  }, [redirect]);
+    if (redirect && !loading) navigate("/user");
+  }, [redirect, loading]);
 
   if (loading) {
     return <Spinner size="100" />;

@@ -19,7 +19,7 @@ const error = createReducer(null, {
 });
 
 const redirect = createReducer(false, {
-  [userActions.fetchUserSuccess]: () => true,
+  [userActions.updateUserSuccess]: () => true,
   [authActions.logOutUserSuccess]: () => false,
 });
 const loading = createReducer(false, {

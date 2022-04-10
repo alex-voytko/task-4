@@ -7,3 +7,5 @@ export const fetchUserError = createAction("users/fetchUserError");
 export const updateUserRequest = createAction("users/updateUserRequest");
 export const updateUserSuccess = createAction("users/updateUserSuccess");
 export const updateUserError = createAction("users/updateUserError");
+
+export const onToggleToAction = createAction("users/onToggleToAction");

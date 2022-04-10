@@ -35,6 +35,9 @@ class UserController {
     try {
       const { email, password } = req.body;
       const user = await User.findOne({ email });
+      if (user.isBlocked) {
+        return res.status(400).json({ message: `This user has been blocked` });
+      }
       if (!user) {
         return res.status(400).json({ message: `${email} has not found` });
       }
