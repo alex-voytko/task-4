@@ -46,11 +46,14 @@ function UserView() {
   };
 
   const onBlockClick = e => {
-    const updateData = markedItems.map(({ _id }) => ({
-      _id,
-      isBlocked: e.target.textContent === "Block" ? true : false,
-      isOnline: false,
-    }));
+    const updateData =
+      e.target.textContent === "Block"
+        ? markedItems.map(({ _id }) => ({
+            _id,
+            isBlocked: true,
+            isOnline: false,
+          }))
+        : markedItems.map(({ _id }) => ({ _id, isBlocked: false }));
     setMarkedItems([]);
     dispatch(userOperations.updateBlockData(updateData));
     if (
@@ -59,7 +62,8 @@ function UserView() {
     ) {
       dispatch(authOperations.logOut({ _id: currentUserId, isOnline: false }));
     }
-    setUsers([...users]);
+    const listRef = document.querySelectorAll(".render-table");
+    listRef.forEach(el => (el.firstChild.firstElementChild.checked = false));
   };
 
   useEffect(() => {
@@ -70,7 +74,6 @@ function UserView() {
   useEffect(() => {
     dispatch(userOperations.fetchUsers());
     setUsers([...getItems]);
-    localStorage.removeItem("persist:root");
   }, [dispatch]);
 
   useEffect(() => {

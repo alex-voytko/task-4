@@ -18,3 +18,18 @@
   display: flex;
   justify-content: center;
 }
+.logout-btn {
+  margin-left: 10px;
+}
+
+@media screen and(min-width: 992px) {
+  .user-bar-container {
+    position: absolute;
+    right: 0;
+    display: flex;
+    justify-content: end;
+  }
+  .container {
+    position: relative;
+  }
+}

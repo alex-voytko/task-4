@@ -1,6 +1,5 @@
 import { Container, Navbar, Nav } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import UserBar from "./UserBar";
 import authOperations from "../redux/auth-redux/auth-operations";
@@ -24,7 +23,7 @@ function AppBar() {
       <Container>
         <Navbar.Brand href="/">Brand</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
+        <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="navigation-container">
             {isLogined && (
               <Nav.Link className="mr-3" href="/user">
