@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import userOperations from "../redux/user-redux/user-operations";
 import _ from "lodash";
@@ -11,6 +11,7 @@ function UserView() {
 
   const [users, setUsers] = useState([]);
   const [markedItems, setMarkedItems] = useState([]);
+  const [markAll, setMarkAll] = useState(false);
   let counter = 1;
   const getItems = useSelector(state => state.users.items);
   const isLogined = useSelector(state => state.auth.loginedUser.token);
@@ -24,7 +25,9 @@ function UserView() {
     );
   };
   console.log(markedItems);
-  const handleChangeAll = e => {};
+  const handleChangeAll = e => {
+    setMarkAll(!markAll);
+  };
 
   const onDeleteClick = () => {
     dispatch(userOperations.deleteUsers(markedItems.map(el => el._id)));
@@ -36,6 +39,7 @@ function UserView() {
   useEffect(() => {
     dispatch(userOperations.fetchUsers());
     setUsers([...getItems]);
+    localStorage.removeItem("persist:root");
   }, [dispatch]);
 
   useEffect(() => {
@@ -87,6 +91,7 @@ function UserView() {
                     id={_id}
                     type="checkbox"
                     onChange={handleChangeOne}
+                    checked={markAll ? true : false}
                   />
                 </td>
                 <td>{counter++}</td>

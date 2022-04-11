@@ -28,6 +28,7 @@ const signIn = data => async dispatch => {
 const logOut = currentUser => async dispatch => {
   dispatch(authActions.logOutUserRequest());
   try {
+    console.log(currentUser);
     await axios.put("/users", currentUser);
     dispatch(authActions.logOutUserSuccess());
   } catch (error) {

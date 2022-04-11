@@ -10,10 +10,10 @@ function AppBar() {
   const navigate = useNavigate();
   const getName = useSelector(state => state.auth.loginedUser.user);
   const isLogined = useSelector(state => state.auth.loginedUser.token);
-  const currentUser = useSelector(state => state.users.currentUser);
+  const userId = useSelector(state => state.auth.loginedUser.userId);
 
   const onLogOutHandler = () => {
-    dispatch(authOperations.logOut({ ...currentUser, isOnline: false }));
+    dispatch(authOperations.logOut({ _id: userId, isOnline: false }));
     try {
       navigate("/");
     } catch (error) {}

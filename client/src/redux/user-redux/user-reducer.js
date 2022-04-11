@@ -6,20 +6,12 @@ const items = createReducer([], {
   [userActions.fetchUserSuccess]: (_, { payload }) => payload,
 });
 
-const currentUser = createReducer(
-  {},
-  {
-    [userActions.updateUserSuccess]: (_, { payload }) => ({ ...payload }),
-    [authActions.logOutUserSuccess]: (state, _) => "",
-  },
-);
-
 const error = createReducer(null, {
   [userActions.fetchUserError]: (_, { payload }) => payload,
 });
 
 const redirect = createReducer(false, {
-  [userActions.updateUserSuccess]: () => true,
+  [userActions.fetchUserSuccess]: () => true,
   [authActions.logOutUserSuccess]: () => false,
   [userActions.deleteUsersSuccess]: () => true,
 });
@@ -31,7 +23,6 @@ const loading = createReducer(false, {
 export default combineReducers({
   items,
   error,
-  currentUser,
   redirect,
   loading,
 });

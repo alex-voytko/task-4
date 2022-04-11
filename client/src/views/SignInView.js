@@ -12,7 +12,6 @@ function SignInView() {
 
   const [data, setData] = useState({ email: "", password: "" });
   const isLogined = useSelector(state => state.auth.loginedUser.token);
-  const userId = useSelector(state => state.auth.loginedUser.userId);
   const loading = useSelector(state => state.users.loading);
   const redirect = useSelector(state => state.users.redirect);
 
@@ -28,14 +27,14 @@ function SignInView() {
 
   useEffect(() => {
     if (isLogined) {
-      dispatch(userOperations.updateLoginedUser(userId));
+      // dispatch(userOperations.updateLoginedUser(userId));
       dispatch(userOperations.fetchUsers());
     }
   }, [isLogined]);
 
   useEffect(() => {
-    if (redirect && !loading) navigate("/user");
-  }, [redirect, loading]);
+    if (redirect) navigate("/user");
+  }, [redirect]);
 
   if (loading) {
     return <Spinner size="100" />;

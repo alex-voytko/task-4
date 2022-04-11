@@ -34,7 +34,10 @@ class UserController {
   async login(req, res) {
     try {
       const { email, password } = req.body;
-      const user = await User.findOne({ email });
+      const user = await User.findOneAndUpdate(
+        { email },
+        { lastVisit: moment().format("Do of MMMM, HH:mm"), isOnline: true }
+      );
       if (user.isBlocked) {
         return res.status(400).json({ message: `This user has been blocked` });
       }
@@ -45,6 +48,7 @@ class UserController {
       if (!validPassword) {
         return res.status(400).json({ message: `Incorrect password` });
       }
+
       const token = jsonwebtoken.sign(
         {
           userId: user._id,

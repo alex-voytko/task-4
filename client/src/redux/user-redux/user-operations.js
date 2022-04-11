@@ -1,6 +1,6 @@
 import * as userActions from "./user-actions";
 import axios from "axios";
-import moment from "moment";
+// import moment from "moment";
 
 axios.defaults.baseURL = "http://localhost:5000/app";
 
@@ -13,15 +13,11 @@ const fetchUsers = () => dispatch => {
     .catch(error => dispatch(userActions.fetchUserError(error.message)));
 };
 
-const updateLoginedUser = id => dispatch => {
+const updateLoginedUser = updateData => dispatch => {
   dispatch(userActions.updateUserRequest());
-  const updateUser = {
-    _id: id,
-    lastVisit: moment().format("Do of MMMM, HH:mm"),
-    isOnline: true,
-  };
+
   axios
-    .put("/users", updateUser)
+    .put("/users", updateData)
     .then(({ data }) => dispatch(userActions.updateUserSuccess(data)))
     .catch(error => dispatch(userActions.updateUserError(error.message)));
 };
