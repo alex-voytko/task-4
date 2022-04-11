@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
-import userOperations from "../redux/user-redux/user-operations";
 import _ from "lodash";
+import userOperations from "../redux/user-redux/user-operations";
+import authOperations from "../redux/auth-redux/auth-operations";
 
 function UserView() {
   const dispatch = useDispatch();
@@ -11,31 +12,61 @@ function UserView() {
 
   const [users, setUsers] = useState([]);
   const [markedItems, setMarkedItems] = useState([]);
-  const [markAll, setMarkAll] = useState(false);
-  let counter = 1;
   const getItems = useSelector(state => state.users.items);
   const isLogined = useSelector(state => state.auth.loginedUser.token);
+  const currentUserId = useSelector(state => state.auth.loginedUser.userId);
+  let counter = 1;
 
-  const handleChangeOne = e => {
-    const { id, dataset } = e.target;
+  const handleChange = useCallback(e => {
+    const { dataset, id } = e.target;
     setMarkedItems(
       !markedItems.map(el => el._id).includes(id)
         ? [...markedItems, users[dataset.id]]
         : markedItems.filter(el => el._id !== id),
     );
-  };
-  console.log(markedItems);
-  const handleChangeAll = e => {
-    setMarkAll(!markAll);
-  };
+  });
+
+  const handleChangeAll = useCallback(e => {
+    let { checked } = e.target;
+    const listRef = document.querySelectorAll(".render-table");
+    listRef.forEach(el => (el.firstChild.firstElementChild.checked = checked));
+    setMarkedItems(checked ? [...users] : []);
+  });
 
   const onDeleteClick = () => {
-    dispatch(userOperations.deleteUsers(markedItems.map(el => el._id)));
+    const ids = markedItems.map(({ _id }) => _id);
+    dispatch(userOperations.deleteUsers(ids));
+    if (ids.includes(currentUserId)) {
+      dispatch(authOperations.logOut({ _id: currentUserId, isOnline: false }));
+    }
     const updatedUsers = [...users];
     _.pullAllWith(updatedUsers, markedItems, _.isEqual);
     setMarkedItems([]);
     setUsers([...updatedUsers]);
   };
+
+  const onBlockClick = e => {
+    const updateData = markedItems.map(({ _id }) => ({
+      _id,
+      isBlocked: e.target.textContent === "Block" ? true : false,
+      isOnline: false,
+    }));
+    setMarkedItems([]);
+    dispatch(userOperations.updateBlockData(updateData));
+    if (
+      e.target.textContent === "Block" &&
+      updateData.map(({ _id }) => _id).includes(currentUserId)
+    ) {
+      dispatch(authOperations.logOut({ _id: currentUserId, isOnline: false }));
+    }
+    setUsers([...users]);
+  };
+
+  useEffect(() => {
+    document.querySelector("#select-all").checked =
+      users.length === markedItems.length ? true : false;
+  }, [markedItems, users]);
+
   useEffect(() => {
     dispatch(userOperations.fetchUsers());
     setUsers([...getItems]);
@@ -43,7 +74,7 @@ function UserView() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!isLogined) navigate("/");
+    if (!isLogined) navigate("/sign-in");
   }, [isLogined]);
 
   return (
@@ -54,8 +85,17 @@ function UserView() {
           variant="dark"
           disabled={!markedItems.length ? true : false}
           type="button"
+          onClick={onBlockClick}
         >
           Block
+        </Button>
+        <Button
+          variant="secondary"
+          disabled={!markedItems.length ? true : false}
+          type="button"
+          onClick={onBlockClick}
+        >
+          Unblock
         </Button>
         <Button
           variant="danger"
@@ -71,7 +111,11 @@ function UserView() {
         <thead>
           <tr>
             <th>
-              <input type="checkbox" onChange={handleChangeAll} />
+              <input
+                id="select-all"
+                type="checkbox"
+                onChange={handleChangeAll}
+              />
             </th>
             <th>#</th>
             <th>Name</th>
@@ -84,14 +128,13 @@ function UserView() {
         <tbody>
           {users.map(
             ({ _id, name, email, signUpDate, lastVisit, isOnline }) => (
-              <tr key={_id}>
-                <td>
+              <tr key={_id} className="render-table">
+                <td className="checkboxes-list">
                   <input
                     data-id={counter - 1}
                     id={_id}
                     type="checkbox"
-                    onChange={handleChangeOne}
-                    checked={markAll ? true : false}
+                    onChange={handleChange}
                   />
                 </td>
                 <td>{counter++}</td>

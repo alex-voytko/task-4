@@ -27,7 +27,6 @@ function SignInView() {
 
   useEffect(() => {
     if (isLogined) {
-      // dispatch(userOperations.updateLoginedUser(userId));
       dispatch(userOperations.fetchUsers());
     }
   }, [isLogined]);

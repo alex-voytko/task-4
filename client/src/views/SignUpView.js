@@ -16,7 +16,6 @@ function SignUpView() {
     e.preventDefault();
     dispatch(
       authOperations.signUp({
-        isMarked: false,
         isBlocked: false,
         isOnline: false,
         ...data,

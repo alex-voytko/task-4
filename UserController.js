@@ -62,7 +62,6 @@ class UserController {
         user: user.name,
       });
     } catch (error) {
-      console.log(error);
       return res.status(400).json({ message: "Login error" });
     }
   }
@@ -70,17 +69,6 @@ class UserController {
     try {
       const users = await User.find();
       return res.json(users);
-    } catch (e) {
-      res.status(500).json(e.message);
-    }
-  }
-  async getOne(req, res) {
-    try {
-      if (!req.params.id) {
-        res.status(400).json({ message: "Id not specified" });
-      }
-      const user = await User.findById(req.params.id);
-      return res.json(user);
     } catch (e) {
       res.status(500).json(e.message);
     }

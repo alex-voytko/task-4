@@ -8,6 +8,8 @@ const items = createReducer([], {
 
 const error = createReducer(null, {
   [userActions.fetchUserError]: (_, { payload }) => payload,
+  [userActions.updateBlockDataError]: (_, { payload }) => payload,
+  [userActions.deleteUsersError]: (_, { payload }) => payload,
 });
 
 const redirect = createReducer(false, {
@@ -15,9 +17,14 @@ const redirect = createReducer(false, {
   [authActions.logOutUserSuccess]: () => false,
   [userActions.deleteUsersSuccess]: () => true,
 });
+
 const loading = createReducer(false, {
   [userActions.fetchUserRequest]: () => true,
   [userActions.fetchUserSuccess]: () => false,
+  [userActions.updateBlockDataRequest]: () => true,
+  [userActions.updateBlockDataSuccess]: () => false,
+  [userActions.deleteUsersRequest]: () => true,
+  [userActions.deleteUsersSuccess]: () => false,
 });
 
 export default combineReducers({

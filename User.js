@@ -8,7 +8,6 @@ const User = new mongoose.Schema({
   isBlocked: { type: Boolean, required: true },
   isOnline: { type: Boolean, required: true },
   lastVisit: { type: String },
-  isMarked: { type: Boolean },
 });
 
 export default mongoose.model("User", User);

@@ -5,12 +5,13 @@ const loginedUser = createReducer(
   {},
   {
     [authActions.signInUserSuccess]: (_, { payload }) => ({ ...payload }),
-    [authActions.logOutUserSuccess]: (state, _) => "",
+    [authActions.logOutUserSuccess]: () => "",
   },
 );
 
 const error = createReducer(null, {
   [authActions.signUpUserError]: (_, { payload }) => payload,
+  [authActions.signInUserError]: (_, { payload }) => payload,
   [authActions.logOutUserError]: (_, { payload }) => payload,
 });
 
